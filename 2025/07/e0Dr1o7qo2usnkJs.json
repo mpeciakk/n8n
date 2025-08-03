@@ -1,0 +1,136 @@
+{
+  "active": false,
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "iCloud Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "iCloud Calendar": {
+      "main": [
+        [
+          {
+            "node": "iCloud Calendar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "iCloud Calendar1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-11T21:39:46.997Z",
+  "id": "e0Dr1o7qo2usnkJs",
+  "meta": null,
+  "name": "Fetch icloud events",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "start"
+            },
+            {
+              "name": "end"
+            }
+          ]
+        }
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        260,
+        320
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-icloud.iCloudCalendar",
+      "typeVersion": 1,
+      "position": [
+        480,
+        320
+      ],
+      "id": "054c8900-14cb-4f2f-b40f-0fe8f6609957",
+      "name": "iCloud Calendar",
+      "alwaysOutputData": true,
+      "credentials": {
+        "iCloudApi": {
+          "id": "r3bBJhW51cOyLeEz",
+          "name": "iCloud CalDAV account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getEvents",
+        "calendarId": "=98D38CCD-7E28-4227-BEB6-1DA266E0A977",
+        "additionalFields": {
+          "startDate": "={{ $('When Executed by Another Workflow').item.json.start }}",
+          "endDate": "={{ $('When Executed by Another Workflow').item.json.end }}"
+        }
+      },
+      "type": "n8n-nodes-icloud.iCloudCalendar",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
+      ],
+      "id": "5837b34b-87b1-4678-9270-2006c06f9b00",
+      "name": "iCloud Calendar1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "iCloudApi": {
+          "id": "r3bBJhW51cOyLeEz",
+          "name": "iCloud CalDAV account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        920,
+        320
+      ],
+      "id": "72c61acc-07b2-44e2-8082-14811fecae43",
+      "name": "Aggregate",
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-14T07:25:04.000Z",
+  "versionId": "7a014591-b6da-4d43-bfa5-a96e76c02ab3"
+}
