@@ -1,0 +1,73 @@
+{
+  "active": false,
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "NTFY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-08T14:39:15.918Z",
+  "id": "1II5Pqc8SheUYpQp",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Workflow error",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bb865d81-4c29-4a9a-8e94-a55151c91678",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "useCustomServer": true,
+        "serverUrl": "https://ntfy.peciak.xyz",
+        "topic": "n8n",
+        "title": "Workflow error",
+        "message": "={{ $json.workflow.name }} error!\nMessage: {{ $json.execution.error.message }}\nNode: {{ $json.execution.lastNodeExecuted }}\nStacktrace: {{ $json.execution.error.stack }}",
+        "additionalOptions": {
+          "click": "={{ $json.execution.url }}"
+        }
+      },
+      "type": "@jyln/n8n-nodes-ntfy.ntfy",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "8d5e20b8-9ffd-46eb-8966-7ec642978d09",
+      "name": "NTFY",
+      "credentials": {
+        "ntfyApi": {
+          "id": "tRFOvelRmXXQn7Sv",
+          "name": "NTFY account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-14T07:25:10.000Z",
+  "versionId": "38ef684e-931d-445c-a35d-74455b7d684a"
+}
