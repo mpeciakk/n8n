@@ -1,0 +1,121 @@
+{
+  "active": true,
+  "connections": {
+    "Strava Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "iCloud Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-05-13T11:09:35.387Z",
+  "id": "hYDx1ykntqxy7lZR",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Strava to calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.stravaTrigger",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -140
+      ],
+      "id": "b4f19c76-d79c-48ad-83b6-34b8d35ce5db",
+      "name": "Strava Trigger",
+      "webhookId": "83d1bb32-3bbd-4fbe-adf8-ff01582ae01b",
+      "credentials": {
+        "stravaOAuth2Api": {
+          "id": "iVDbSkweNyJzpw8w",
+          "name": "Strava account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "createEvent",
+        "calendarId": "CC17D20F-D541-4C56-9D10-93F10F652575",
+        "eventTitle": "={{ $json.name }}",
+        "startDate": "={{ $('Strava').item.json.start_date }}",
+        "endDate": "={{ $('Strava').item.json.start_date.toDateTime().plus($('Strava').item.json.elapsed_time, \"seconds\").toString() }}",
+        "timezone": "Europe/Warsaw",
+        "additionalFields": {
+          "description": "=Distance: {{ $('Strava').item.json.distance }}\nMoving time: {{ $('Strava').item.json.moving_time }}\nTotal elevation gain: {{ $('Strava').item.json.total_elevation_gain }}\nAvg speed: {{ $('Strava').item.json.average_speed }}\nMax speed: {{ $('Strava').item.json.max_speed }}"
+        }
+      },
+      "type": "n8n-nodes-icloud.iCloudCalendar",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -140
+      ],
+      "id": "5eacf067-455a-4316-be08-93133486c8ef",
+      "name": "iCloud Calendar",
+      "credentials": {
+        "iCloudApi": {
+          "id": "r3bBJhW51cOyLeEz",
+          "name": "iCloud CalDAV account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb7655ef-9623-4a94-9203-9d37520de603",
+              "name": "name",
+              "value": "={{ $json.name.includes(\"Run\") ? \"👟\" : \"🚲\" }} {{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -140
+      ],
+      "id": "47abc8fd-f915-401c-be70-a480ab255fb0",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Strava Trigger": {
+      "webhookId": 292626
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-14T07:24:31.000Z",
+  "versionId": "dc85c23d-46d4-464e-954b-62e016ab420e"
+}
