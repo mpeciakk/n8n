@@ -1,0 +1,175 @@
+{
+  "active": false,
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Strava",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strava": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "iCloud Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "iCloud Calendar": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-05-13T12:42:04.023Z",
+  "id": "9XEnzOTid65Hl1jA",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Sync strava to calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "createEvent",
+        "calendarId": "CC17D20F-D541-4C56-9D10-93F10F652575",
+        "eventTitle": "={{ $json.name }}",
+        "startDate": "={{ $('Strava').item.json.start_date }}",
+        "endDate": "={{ $('Strava').item.json.start_date.toDateTime().plus($('Strava').item.json.elapsed_time, \"seconds\").toString() }}",
+        "timezone": "Europe/Warsaw",
+        "additionalFields": {
+          "description": "=Distance: {{ $('Strava').item.json.distance }}\nMoving time: {{ $('Strava').item.json.moving_time }}\nTotal elevation gain: {{ $('Strava').item.json.total_elevation_gain }}\nAvg speed: {{ $('Strava').item.json.average_speed }}\nMax speed: {{ $('Strava').item.json.max_speed }}"
+        }
+      },
+      "type": "n8n-nodes-icloud.iCloudCalendar",
+      "typeVersion": 1,
+      "position": [
+        840,
+        100
+      ],
+      "id": "e4dc54e6-011e-4922-9c44-7f924bc9ef3c",
+      "name": "iCloud Calendar",
+      "credentials": {
+        "iCloudApi": {
+          "id": "r3bBJhW51cOyLeEz",
+          "name": "iCloud CalDAV account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb7655ef-9623-4a94-9203-9d37520de603",
+              "name": "name",
+              "value": "={{ $json.name.includes(\"Run\") ? \"👟\" : \"🚲\" }} {{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        -140
+      ],
+      "id": "e0a9efdc-a5f3-4de8-b6d0-fad9248e1dbb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -180
+      ],
+      "id": "54a539a3-3562-4dba-a118-c2cdc0b5f59e",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.strava",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        -180
+      ],
+      "id": "ff486dd8-bc74-4131-915c-160609238c68",
+      "name": "Strava",
+      "credentials": {
+        "stravaOAuth2Api": {
+          "id": "iVDbSkweNyJzpw8w",
+          "name": "Strava account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        540,
+        80
+      ],
+      "id": "34127cc3-b9af-496a-b3d1-06e5d8222a3c",
+      "name": "Loop Over Items"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-14T07:25:12.000Z",
+  "versionId": "fb1c1a0a-32ce-45dd-86c0-3a6151cbccda"
+}
