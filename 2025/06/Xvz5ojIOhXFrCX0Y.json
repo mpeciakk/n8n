@@ -1,0 +1,402 @@
+{
+  "active": true,
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Pull request merged notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pull request review notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull request merged notification": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull request review notification": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-06-28T12:03:45.874Z",
+  "id": "Xvz5ojIOhXFrCX0Y",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "GH PR Review",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "sender": "notifications@github.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        -660
+      ],
+      "id": "72e374d6-813f-46dc-8703-1417ad28931a",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0BP7oqnfVUMUHlsu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Snippet: {{ $json.snippet }} \nUser: {{ $json.From }}\nTo: {{ $json.To }}\nSubject: {{ $json.Subject }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Based on provided data i want you to return proper data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        140,
+        -660
+      ],
+      "id": "668fc0e9-200b-4961-bcf5-07de219531a3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        168,
+        -440
+      ],
+      "id": "6596a458-5963-476a-819d-84ee2b8b017f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "1jdAoQlO0b0RveZz",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"repository\": {\n      \"type\": \"string\"\n    },\n    \"user\": {\n      \"type\": \"string\"\n    },\n    \"pr\": {\n      \"type\": \"string\"\n    },\n    \"pr-name\": {\n      \"type\": \"string\"\n    },\n    \"into\": {\n      \"type\": \"string\"\n    },\n    \"type\": {\n      \"enum\": [\"review\", \"merge\"]\n    }\n  },\n  \"required\": [\n    \"repository\",\n    \"user\",\n    \"pr\",\n    \"pr-name\",\n    \"into\",\n    \"type\"\n  ]\n}\n\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        -440
+      ],
+      "id": "83f7cbd4-e1f1-414c-a106-62a10434efa0",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        956,
+        -660
+      ],
+      "id": "fb2100db-29c3-4e8e-b59c-132433516fae",
+      "name": "Gmail",
+      "webhookId": "b44c41af-5c04-4ea0-a6e8-0a68f66c9a80",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0BP7oqnfVUMUHlsu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3a2e17f4-7e74-4bc8-b4c3-e2e4200ad963",
+              "leftValue": "={{ $json.snippet }}",
+              "rightValue": "merged",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "5d8ba01d-7e24-4799-82ec-acbff06ce9a4",
+              "leftValue": "={{ $json.snippet }}",
+              "rightValue": "requested your review",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -660
+      ],
+      "id": "7aafa9af-b1fc-4ac5-a0c7-60809501d275",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.type }}",
+                    "rightValue": "merge",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "770ce5e3-3762-4d5e-b9c6-18271368ad28"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "merge"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d97cae5e-2760-4898-a91c-ba5af1f3b861",
+                    "leftValue": "={{ $json.output.type }}",
+                    "rightValue": "review",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "review"
+            }
+          ]
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        516,
+        -660
+      ],
+      "id": "5857fbac-6399-4266-a6d8-73f68299f62a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "useCustomServer": true,
+        "serverUrl": "https://ntfy.peciak.xyz",
+        "topic": "github",
+        "title": "={{ $('AI Agent').item.json.output.repository }} pull request merged",
+        "message": "=Merged {{ $('AI Agent').item.json.output['pr-name'] }} into {{ $('AI Agent').item.json.output.into }} by {{ $('AI Agent').item.json.output.user }}",
+        "additionalOptions": {
+          "click": "=https://github.com/{{ $('AI Agent').item.json.output.repository }}"
+        }
+      },
+      "type": "@jyln/n8n-nodes-ntfy.ntfy",
+      "typeVersion": 1,
+      "position": [
+        736,
+        -760
+      ],
+      "id": "97675584-a61e-4b6a-bf11-53975bfbb914",
+      "name": "Pull request merged notification",
+      "credentials": {
+        "ntfyApi": {
+          "id": "tRFOvelRmXXQn7Sv",
+          "name": "NTFY account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "useCustomServer": true,
+        "serverUrl": "https://ntfy.peciak.xyz",
+        "topic": "github",
+        "title": "={{ $('AI Agent').item.json.output.repository }} review requested",
+        "message": "=Requested review in {{ $('AI Agent').item.json.output['pr-name'] }} {{ $('AI Agent').item.json.output.user }}",
+        "additionalOptions": {
+          "click": "=https://github.com/{{ $('AI Agent').item.json.output.repository }}"
+        }
+      },
+      "type": "@jyln/n8n-nodes-ntfy.ntfy",
+      "typeVersion": 1,
+      "position": [
+        736,
+        -560
+      ],
+      "id": "ae8f3a16-2f72-4a1d-8fee-09350518e958",
+      "name": "Pull request review notification",
+      "credentials": {
+        "ntfyApi": {
+          "id": "tRFOvelRmXXQn7Sv",
+          "name": "NTFY account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "1II5Pqc8SheUYpQp"
+  },
+  "staticData": {
+    "node:Gmail Trigger": {
+      "Gmail Trigger": {
+        "lastTimeChecked": 1753694903,
+        "possibleDuplicates": [
+          "198505c9ccbc5d95",
+          "1983bd68a2a7d41f"
+        ]
+      }
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-10T10:24:13.000Z",
+  "versionId": "f0d9dd71-7408-492a-8022-afb2d6eca5cf"
+}
