@@ -1,0 +1,356 @@
+{
+  "active": true,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse spaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Group by status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all folders": {
+      "main": [
+        [
+          {
+            "node": "Get all lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all lists": {
+      "main": [
+        [
+          {
+            "node": "Get all my tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all my tasks": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse spaces": {
+      "main": [
+        [
+          {
+            "node": "Get all folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group by status": {
+      "main": [
+        [
+          {
+            "node": "Generate markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-07-09T15:25:21.297Z",
+  "id": "e021juWEDpulxpeA",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Generate daily agenda",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -700,
+        -360
+      ],
+      "id": "ff52dd53-fb64-4b8c-864d-ebac4e1d3656",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "424e0c58-c71f-40ba-bc24-5ef7c5ac6a6c",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "45a2c138-9e32-4202-8839-59e08fb30eac",
+              "name": "status",
+              "value": "={{ $json.status.status }}",
+              "type": "string"
+            },
+            {
+              "id": "91cfafcd-2192-499d-a1ed-69d0a77056c9",
+              "name": "priority",
+              "value": "={{ $json.priority.priority }}",
+              "type": "string"
+            },
+            {
+              "id": "127b0912-61ba-4f6b-8900-4128d82c67ea",
+              "name": "due_date",
+              "value": "={{ $json.due_date }}",
+              "type": "string"
+            },
+            {
+              "id": "6c5000e5-2695-42f7-8490-039bb0818daf",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "cdbf148e-853e-4efe-83fc-f66a7061c087",
+              "name": "project",
+              "value": "={{ $json.project.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -360
+      ],
+      "id": "e9157d85-103d-4a6d-b50e-cfb22d8d428b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "getAll",
+        "team": "9012713686",
+        "space": "={{ $json.id }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -360
+      ],
+      "id": "bb564048-40e8-4904-9162-e307cd5da94b",
+      "name": "Get all folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "clickUpApi": {
+          "id": "DctNvJkdlKVaifJw",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "list",
+        "operation": "getAll",
+        "team": "9012713686",
+        "space": "={{ $json.space.id }}",
+        "folder": "={{ $json.id }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -360
+      ],
+      "id": "e671e301-2444-4b23-87ba-ec3d60b6c271",
+      "name": "Get all lists",
+      "executeOnce": false,
+      "credentials": {
+        "clickUpApi": {
+          "id": "DctNvJkdlKVaifJw",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "team": "9012713686",
+        "space": "={{ $json.space.id }}",
+        "folder": "={{ $json.folder.id }}",
+        "list": "={{ $json.id }}",
+        "filters": {
+          "assignees": [
+            87796439
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -360
+      ],
+      "id": "e7d1f4a7-74ce-475b-80f0-8a728b911af1",
+      "name": "Get all my tasks",
+      "executeOnce": false,
+      "credentials": {
+        "clickUpApi": {
+          "id": "DctNvJkdlKVaifJw",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      id: \"90123165147\"\n    },\n  },\n  {\n    json: {\n      id: \"90123172331\"\n    }\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -360
+      ],
+      "id": "6c140134-811a-40f3-a265-529255c52f3f",
+      "name": "Parse spaces",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/files/sync/Sync/daily/[{{ $now.format('dd.MM.yyyy') }}] Daily agenda.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -360
+      ],
+      "id": "f965011f-c869-4e07-a589-82529828fc98",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1060,
+        -360
+      ],
+      "id": "05dde1d7-c4cf-4ff7-909f-9a464683547f",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  items: $input.all().reduce((group, item) => {\n    const { status } = item.json;\n    \n    // Initialize the group if it doesn't exist\n    if (!group[status]) {\n      group[status] = [];\n    }\n  \n    // Add the user to the corresponding age group\n    group[status].push(item.json);\n    return group;\n  }, {})\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        -360
+      ],
+      "id": "54a2e512-c324-466c-a2d6-2eeae6906fb2",
+      "name": "Group by status"
+    },
+    {
+      "parameters": {
+        "jsCode": "let content = ``\nconst statuses = [\"to do\", \"in progress\", \"fix\", \"pr review\", \"review\", \"backlog\"]\nconst statusLabels = [\"To do\", \"In progress\", \"To fix\", \"For PR review\", \"For review\", \"Backlog\"];\n\ncontent += \"## Today's tasks:\\n\"\nfor (const status of statuses) {\n  if (!Object.keys($input.first().json.items).includes(status)) continue;\n  \n  content += `\\n**${statusLabels[statuses.indexOf(status)]}**:\\n`\n  for (const item of $input.first().json.items[status]) {\n    content += `- [**${item.project}** / ${item.name}](${item.url})\\n`\n  }\n}\ncontent += \"## Notes:\\n\"\n\nreturn {\n  json: {\n    data: content\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        -360
+      ],
+      "id": "ffc5b667-c0e2-4f47-b231-34ac8ea56c07",
+      "name": "Generate markdown"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "1II5Pqc8SheUYpQp"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-14T07:24:03.000Z",
+  "versionId": "e4872c2c-bc7e-48fd-adc0-e2a7ee1d32d0"
+}
