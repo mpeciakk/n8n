@@ -1,0 +1,387 @@
+{
+  "active": false,
+  "connections": {
+    "Get Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Custom Med tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get UM MMZ tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Home Assistant": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Home Assistant1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ernest AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ernest AI": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-07-11T21:30:28.658Z",
+  "id": "sxSMPGnTda2kNPCq",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Ernest AI",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {
+          "labelIds": [
+            "INBOX",
+            "UNREAD"
+          ],
+          "readStatus": "unread",
+          "receivedAfter": "={{$fromAI(\"date\",\"the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS\")}}"
+        }
+      },
+      "id": "33e2583d-1ff3-4c5f-98d8-837046f676ba",
+      "name": "Get Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1360,
+        360
+      ],
+      "typeVersion": 2.1,
+      "webhookId": "a9cf7f44-4990-42d7-8493-691a640873a6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0BP7oqnfVUMUHlsu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "id": "c4dfb0a9-eecc-4e60-8cc0-e97f03e903cb",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1120,
+        360
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "1jdAoQlO0b0RveZz",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "team": "9012713686",
+        "space": "90123165147",
+        "folder": "90124934915",
+        "list": "901208233000",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.clickUpTool",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        360
+      ],
+      "id": "cd80de47-d551-4a66-baef-b716cf750e6d",
+      "name": "Get Custom Med tasks",
+      "credentials": {
+        "clickUpApi": {
+          "id": "DctNvJkdlKVaifJw",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "team": "9012713686",
+        "space": "90123172331",
+        "folder": "90124942802",
+        "list": "901208339124",
+        "filters": {
+          "assignees": [
+            87796439
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.clickUpTool",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        360
+      ],
+      "id": "4b2b71d5-8bda-43e6-88dd-952c44e104ff",
+      "name": "Get UM MMZ tasks",
+      "credentials": {
+        "clickUpApi": {
+          "id": "DctNvJkdlKVaifJw",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        900,
+        140
+      ],
+      "id": "b7bdaad3-c9d1-40d9-bebb-ff93a0983660",
+      "name": "When chat message received",
+      "webhookId": "9fc40643-157f-4115-936b-217d8649a9b3"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        360
+      ],
+      "id": "b5bce82b-ab0b-4121-80e4-21aef605b66b",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "resource": "state",
+        "operation": "upsert",
+        "entityId": "light.0x54ef4410010fc3e3",
+        "state": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('State', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.homeAssistantTool",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        360
+      ],
+      "id": "d3f40a82-cb3c-4f95-923b-41061c4f865d",
+      "name": "Home Assistant",
+      "credentials": {
+        "homeAssistantApi": {
+          "id": "4m4pca16iuWktWat",
+          "name": "Home Assistant account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to get all events from calendar. The input should be a time range for which events would be returned",
+        "workflowId": {
+          "__rl": true,
+          "value": "e0Dr1o7qo2usnkJs",
+          "mode": "list",
+          "cachedResultName": "My Sub-Workflow 1"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('start', ``, 'string') }}",
+            "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('end', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "start",
+              "displayName": "start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "end",
+              "displayName": "end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1960,
+        360
+      ],
+      "id": "dcb35220-c9ca-4ef1-afdd-e154b4ce656b",
+      "name": "Call n8n Workflow Tool"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1240,
+        360
+      ],
+      "id": "1eba5a48-8ddf-4a4a-8b24-529abfc6c90f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "state",
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.homeAssistantTool",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        360
+      ],
+      "id": "541ab9dd-9baa-403c-baf9-9b05ed9c369c",
+      "name": "Home Assistant1",
+      "credentials": {
+        "homeAssistantApi": {
+          "id": "4m4pca16iuWktWat",
+          "name": "Home Assistant account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Jesteś pomocnym asystentem. Twoje imię to Ernest,\n\nDzisiejsza data to {{ $now }}.\n\nWytyczne\n- Podczas pobierania e-maili odfiltruj wiadomości promocyjne.\n- Podczas podsumowywania e-maili uwzględnij nadawcę, datę wiadomości, temat oraz krótkie streszczenie treści.\n- Jeśli użytkownik nie podał daty w zapytaniu, zakładaj, że chodzi o dzisiaj.\n- Używaj narzędzia ClickUp oraz iCloud calendar do odpowiadania na pytania dotyczące zadań.\n- Podczas odpowiadania na pytania dotyczące wydarzeń w kalendarzu filtruj wydarzenia niepasujące do zapytania. Na przykład, jeśli pytanie dotyczy wydarzeń na dziś, odpowiadaj tylko tymi z dzisiejszego dnia. Nie wspominaj o przyszłych wydarzeniach, jeśli są oddalone o więcej niż tydzień.\n- Używaj narzędzi Homeassistant do odpowiadania i zarządzania urządzeniami w domu."
+        }
+      },
+      "id": "18a46c89-4633-4d26-9deb-6fd5b74484a1",
+      "name": "Ernest AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1460,
+        140
+      ],
+      "typeVersion": 1.6
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n",
+  "repo_owner": "mpeciakk",
+  "repo_path": "",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-07-14T07:24:56.000Z",
+  "versionId": "156bca85-2760-46f7-bc18-e20c1321954c"
+}
